@@ -5,10 +5,12 @@ class AuthTextFields extends StatelessWidget {
       {required this.hintsText,
         required this.obscureTexts,
         this.onChange,
+        this.validate,
         required this.keyboardTypes});
 
   final String hintsText;
   final bool obscureTexts;
+  Function()? validate;
   final Function(String value)? onChange;
   final TextInputType keyboardTypes;
 
@@ -17,6 +19,7 @@ class AuthTextFields extends StatelessWidget {
     return TextFormField(
       onChanged: onChange,
       keyboardType: keyboardTypes,
+      validator: validate!(),
       obscureText: obscureTexts,
       style: const TextStyle(
         color: Color(0xFF1D2445),

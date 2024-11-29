@@ -60,19 +60,17 @@ class _DetailsPageState extends State<DetailsPage> {
                   Positioned(
                     top: 16,
                     left: 16,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white.withOpacity(0.8),
-                      child: const Icon(Icons.arrow_back, color: Colors.black),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white.withOpacity(0.8),
+                        child: const Icon(Icons.arrow_back, color: Colors.black),
+                      ),
                     ),
                   ),
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white.withOpacity(0.8),
-                      child: const Icon(Icons.more_vert, color: Colors.black),
-                    ),
-                  ),
+
                 ],
               ),
               Padding(
