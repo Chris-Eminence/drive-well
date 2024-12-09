@@ -3,6 +3,7 @@ import 'package:drive_well/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../profile_screen.dart';
+import '../../user_profile.dart';
 
 class BottomNav extends StatefulWidget {
   @override
@@ -17,7 +18,8 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _screens = [
     const Center(child: Homepage()),
     const Center(child: Text('History screen ')),
-    const Center(child: ProfilePage()),
+    // const Center(child: ProfilePage()),
+    const Center(child: UserInfoScreen()),
   ];
 
   // Function to handle tap on BottomNavigationBar items

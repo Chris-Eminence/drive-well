@@ -15,6 +15,15 @@ class UserProvider with ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  int _hoursCounter = 0;
+  int get hoursCounter => _hoursCounter;
+
+  int _initialPrice = 5000;
+  int get initialPrice => _initialPrice;
+
+  int get finalPrice => _hoursCounter * _initialPrice;
+
+
   Future<bool> registerUser({
     required String email,
     required String firstName,
@@ -59,16 +68,19 @@ class UserProvider with ChangeNotifier {
   Future<bool> loginUser({
     required String email,
     required String password,
-  }) async {
+  }) async
+  {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
       final success = await loginUserFunction(email, password);
+      print('User logged in Successfully');
       if (success) {
         // Optionally set the current user if you have user details
-        _currentUser = User(email: email); // Update if more fields are needed
+        _currentUser = User(email: email);
+
         _isLoading = false;
         notifyListeners();
         return true;
@@ -88,6 +100,21 @@ class UserProvider with ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
   }
+
+  void hoursIncrement(){
+    _hoursCounter ++;
+    notifyListeners();
+  }
+  void hoursDecrement(){
+    if(_hoursCounter > 0) {
+      _hoursCounter--;
+      notifyListeners();
+    }
+  }
+
+  // Allow updating the initial value if needed
+
+
 
 
 

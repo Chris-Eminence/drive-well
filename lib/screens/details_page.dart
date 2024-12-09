@@ -1,7 +1,9 @@
+import 'package:drive_well/provider/user_provider.dart';
 import 'package:drive_well/screens/check_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:drive_well/constants.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/description.dart'; // Ensure constants are imported
 
@@ -13,21 +15,22 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  int numberOfHours = 0;
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
-      floatingActionButton: numberOfHours > 0
+      floatingActionButton: userProvider.hoursCounter > 0
     ? FloatingActionButton.extended(
     backgroundColor: kPrimaryColor, // Set your preferred color
       onPressed: () {
         // Handle continue action
         print('Continue button pressed');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage()));
       },
       label: Text(
-        "Continue",
+        "₦${userProvider.finalPrice} Continue",
         style: GoogleFonts.nunito(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -87,8 +90,8 @@ class _DetailsPageState extends State<DetailsPage> {
                         color: kPrimaryColor,
                       ),
                     ),
-                    Text(
-                      '₦5000/hour',
+                    Text( userProvider.initialPrice > 5000 ?
+                      '₦${userProvider.finalPrice }/hour' : '₦${userProvider.initialPrice }',
                       style: GoogleFonts.nunito(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -105,17 +108,11 @@ class _DetailsPageState extends State<DetailsPage> {
                             padding: const EdgeInsets.only(right: 8.0),
                             child: InkWell(
                               onTap: () {
-                                setState(() {
-                                  if (numberOfHours == 0) {
-                                    print("can't decrease number");
-                                    return;
-                                  }
-                                  numberOfHours--;
-                                });
+                                userProvider.hoursDecrement();
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: numberOfHours <= 0
+                                  color: userProvider.hoursCounter <= 0
                                       ? Colors.grey
                                       : kPrimaryColor,
                                   borderRadius: BorderRadius.circular(30),
@@ -136,7 +133,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         Column(
                           children: [
                             Text(
-                              numberOfHours.toString(),
+                              userProvider.hoursCounter.toString(),
                               style: GoogleFonts.nunito(
                                   fontSize: 32,
                                   color: kSecondaryColor,
@@ -156,9 +153,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: InkWell(
                               onTap: () {
-                                setState(() {
-                                  numberOfHours++;
-                                });
+                                userProvider.hoursIncrement();
                               },
                               child: Container(
                                 decoration: BoxDecoration(
