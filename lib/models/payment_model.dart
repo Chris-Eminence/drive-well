@@ -1,48 +1,37 @@
-class PaymentModel {
-  final String? emailAddress;
-  final String? amount;
-  final String? duration;
+class Payment {
+  final String email;
+  final int amount;
+  final int hours;
+  final int? courseId;
+  final String duration;
 
-  // Constructor
-  PaymentModel({
-    required this.emailAddress,
+  Payment({
+    required this.email,
     required this.amount,
+    required this.hours,
+    this.courseId,
     required this.duration,
   });
 
-  // Factory constructor to create an instance from a JSON map
-  factory PaymentModel.fromJson(Map<String, dynamic> json) {
-    return PaymentModel(
-      emailAddress: json['emailAddress'] as String?,
-      amount: json['amount'] as String?,
-      duration: json['duration'] as String?,
+  // Factory constructor for creating a Payment object from JSON
+  factory Payment.fromJson(Map<String, dynamic> json) {
+    return Payment(
+      email: json['email'] as String,
+      amount: json['amount'] as int,
+      hours: json['hours'] as int,
+      courseId: json['course_id'] ,
+      duration: json['duration'] as String,
     );
   }
 
-  // Method to convert an instance to JSON
+  // Method to convert a Payment object to JSON
   Map<String, dynamic> toJson() {
     return {
-      'emailAddress': emailAddress,
+      'email': email,
       'amount': amount,
+      'hours': hours,
+      'course_id': courseId,
       'duration': duration,
     };
-  }
-
-  // Optional: Copy with method to create a copy with updated values
-  PaymentModel copyWith({
-    String? emailAddress,
-    String? amount,
-    String? duration,
-  }) {
-    return PaymentModel(
-      emailAddress: emailAddress ?? this.emailAddress,
-      amount: amount ?? this.amount,
-      duration: duration ?? this.duration,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'PaymentModel(emailAddress: $emailAddress, amount: $amount, duration: $duration)';
   }
 }

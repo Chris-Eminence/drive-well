@@ -40,6 +40,10 @@ class UserInfoScreen extends StatelessWidget {
               'Phone: ${currentUser.phoneNumber ?? 'N/A'}',
               style: const TextStyle(fontSize: 16),
             ),
+            Text(
+              'Phone: ${currentUser.phoneNumber ?? 'N/A'}',
+              style: const TextStyle(fontSize: 16),
+            ),
           ],
         ),
       ),

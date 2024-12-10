@@ -1,7 +1,9 @@
 import 'package:drive_well/repository/registeration_repo.dart';
 import 'package:flutter/material.dart';
+import '../models/payment_model.dart';
 import '../models/user_model.dart';
 import '../repository/login_repo.dart';
+import '../repository/payment_repo.dart';
 
 class UserProvider with ChangeNotifier {
   final UserService _userService = UserService();
@@ -64,28 +66,34 @@ class UserProvider with ChangeNotifier {
     return false;
   }
 
-
   Future<bool> loginUser({
     required String email,
     required String password,
-  }) async
-  {
+  }) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final success = await loginUserFunction(email, password);
-      print('User logged in Successfully');
-      if (success) {
-        // Optionally set the current user if you have user details
-        _currentUser = User(email: email);
+      // Call the login API and get the response
+      final response = await loginUserFunction(email, password);
+
+      if (response is Map<String, dynamic> && response['token'] != null) {
+        // Extract user details from the response
+        final userData = response['user'];
+
+        _currentUser = User(
+          email: userData['email'],
+          firstName: userData['first_name'],
+          lastName: userData['last_name'],
+          phoneNumber: userData['phone_number'],
+        );
 
         _isLoading = false;
         notifyListeners();
         return true;
       } else {
-        _errorMessage = 'Failed to log in.';
+        _errorMessage = 'Failed to log in: Invalid response.';
       }
     } catch (e) {
       _errorMessage = 'An error occurred: $e';
@@ -95,6 +103,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
     return false;
   }
+
 
   void clearError() {
     _errorMessage = null;
@@ -112,10 +121,19 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  // Allow updating the initial value if needed
 
+// FOR MAKING PAYMENTS
 
+  Future<void> processPayment(Payment payment) async {
+    try {
+      await makePayment(payment);
+      // Notify listeners if you need to update UI or state
 
-
+      notifyListeners();
+    } catch (e) {
+      // Handle any exceptions or log errors
+      print('Error in processPayment: $e');
+    }
+  }
 
 }

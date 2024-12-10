@@ -4,10 +4,7 @@ import 'package:drive_well/screens/home_screen/components/carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
 import '../../constants.dart';
-import '../../provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -22,40 +19,18 @@ class _HomepageState extends State<Homepage> {
   List<LessonsModel> lessonItems = [
     LessonsModel(
       imageUrl: 'assets/images/lessons_ima.jpg',
-      title: 'Lesson 1',
-      price: 29.99,
+      lessonName: 'Lesson 1',
+      duration: '1 hour',
+      amount: 299,
       description: 'This is a description of Product 1.',
     ),
-    LessonsModel(
-      imageUrl: 'assets/images/lessons_im.jpg',
-      title: 'Lesson 2',
-      price: 49.99,
-      description: 'This is a description of Product 2.',
-    ),
-    // Add more products as needed
-    LessonsModel(
-      imageUrl: 'assets/images/lessons_image.jpg',
-      title: 'Lesson 3',
-      price: 49.99,
-      description: 'This is a description of Product 2.',
-    ),
-    LessonsModel(
-      imageUrl: 'assets/images/lessons_imag.jpg',
-      title: 'Lesson 3',
-      price: 49.99,
-      description: 'This is a description of Product 2.',
-    ),
+
     LessonsModel(
       imageUrl: 'assets/images/lessons_ima.jpg',
-      title: 'Lesson 1',
-      price: 29.99,
+      lessonName: 'Lesson 1',
+      duration: '1 hour',
+      amount: 299,
       description: 'This is a description of Product 1.',
-    ),
-    LessonsModel(
-      imageUrl: 'assets/images/lessons_im.jpg',
-      title: 'Lesson 2',
-      price: 49.99,
-      description: 'This is a description of Product 2.',
     ),
   ];
 
