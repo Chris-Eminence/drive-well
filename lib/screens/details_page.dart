@@ -34,7 +34,7 @@ class _DetailsPageState extends State<DetailsPage> {
           email: userProvider.currentUser!.email!,
           amount: userProvider.finalPrice, // Amount in cents or as per requirement
           hours: userProvider.hoursCounter, // Duration in hours
-          courseId: 1, // Optional field
+          courseId: 1,
           duration: userProvider.hoursCounter.toString(), // Duration description
         );
 
