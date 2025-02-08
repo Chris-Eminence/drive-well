@@ -17,6 +17,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _lastNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _addressController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   @override
@@ -114,6 +115,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
+                    labelText: 'Address',
+                    labelStyle: TextStyle(color: Colors.black54),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF1D2445)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF1D2445)),
+                    ),
+                  ),
+                  validator: (value) =>
+                  value!.isEmpty ? 'Enter address' : null,
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
                   controller: _passwordController,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: const InputDecoration(
@@ -130,6 +147,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   validator: (value) =>
                   value!.isEmpty ? 'Enter password' : null,
                 ),
+
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _confirmPasswordController,
@@ -162,6 +180,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             firstName: _firstNameController.text,
                             lastName: _lastNameController.text,
                             phoneNumber: _phoneNumberController.text,
+                            address: _addressController.text,
                             password: _passwordController.text,
                             confirmPassword: _confirmPasswordController.text,
                           );

@@ -1,39 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-// Login logic
-// Future<bool> loginUserFunction(String email, String password) async {
-//   // const String baseUrl = 'https://test001.otecfx.com/api/login';
-//   const String baseUrl = 'https://test001.otecfx.com/api/auth/login';
-//   try {
-//     final response = await http.post(
-//       Uri.parse(baseUrl),
-//       headers: {'Content-Type': 'application/json'},
-//       body: jsonEncode({
-//         'email': email,
-//         'password': password,
-//       }),
-//     );
-//
-//     if (response.statusCode == 200 || response.statusCode ==  201) {
-//       // Login successful
-//       print("Login is now successful with status code ${response.statusCode == 201}");
-//       print("body is ${response.body}");
-//       return true;
-//     } else {
-//       // Log error message from the server
-//       final errorData = jsonDecode(response.body);
-//       print('Login failed: ${errorData['message']}');
-//       print("this is the failed status code ${response.statusCode}");
-//       return false;
-//     }
-//   } catch (e) {
-//     print('Error during login: $e');
-//
-//     return false;
-//   }
-// }
-
 Future<Map<String, dynamic>?> loginUserFunction(String email, String password) async {
   const String baseUrl = 'https://test001.otecfx.com/api/auth/login';
   try {
@@ -47,7 +14,20 @@ Future<Map<String, dynamic>?> loginUserFunction(String email, String password) a
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return jsonDecode(response.body);
+      final responseData = jsonDecode(response.body);
+      final token = responseData['token']; // Extract token
+      final userId = responseData['user']['id']; // Extract user ID
+
+      // Log or use the token and user ID
+      print('Login successful!');
+      print('Token: $token');
+      print('User ID: $userId');
+
+      return {
+        'token': token,
+        'userId': userId,
+        'user': responseData['user'], // Optional: Include full user data
+      };
     } else {
       print('Login failed: ${response.body}');
       return null;
@@ -57,3 +37,4 @@ Future<Map<String, dynamic>?> loginUserFunction(String email, String password) a
     return null;
   }
 }
+

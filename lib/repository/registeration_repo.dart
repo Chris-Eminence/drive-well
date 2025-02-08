@@ -12,6 +12,7 @@ class UserService {
     required String firstName,
     required String lastName,
     required String phoneNumber,
+    required String address,
     required String password, confirmPassword,
   }) async {
     final url = Uri.parse('$baseUrl/register');
@@ -21,6 +22,7 @@ class UserService {
       'last_name': lastName,
       'phone_number': phoneNumber,
       'password': password,
+      'addrress' : address,
       'password_confirmation': confirmPassword,
     };
 

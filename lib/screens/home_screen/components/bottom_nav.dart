@@ -19,7 +19,7 @@ class _BottomNavState extends State<BottomNav> {
     const Center(child: Homepage()),
     const Center(child: Text('History screen ')),
     // const Center(child: ProfilePage()),
-    const Center(child: UserInfoScreen()),
+    const Center(child: UserTestProfilePage()),
   ];
 
   // Function to handle tap on BottomNavigationBar items
