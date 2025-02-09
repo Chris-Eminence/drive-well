@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:widget_and_text_animator/widget_and_text_animator.dart';
 import 'package:drive_well/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../helper/auth_helper.dart';
 import '../home_screen/components/bottom_nav.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,31 +17,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkUserRegistrationStatus();
+    _navigateToNextScreen();
   }
 
-  Future<void> _checkUserRegistrationStatus() async {
+  Future<void> _navigateToNextScreen() async {
     // Wait for the splash screen animation duration
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 1));
 
-    // Access shared preferences
-    final prefs = await SharedPreferences.getInstance();
+    // Check if the user is logged in (i.e., token and ID exist)
+    final isLoggedIn = await AuthHelper.isLoggedIn();
+    print('Is logged in: $isLoggedIn'); // Debug log
 
-    // Check if the user is registered
-    final isRegistered = prefs.getBool('isRegistered') ?? false;
 
-    // Navigate to the appropriate screen
-    if (isRegistered) {
-      Navigator.pushReplacement(
+    Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNav()), // Replace with your home screen
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => PrimaryOnboardingScreen()),
-      );
-    }
+        MaterialPageRoute(
+            builder: (context) => isLoggedIn
+                ? BottomNav()
+                : const PrimaryOnboardingScreen())); // Replace with your home screen
   }
 
   @override

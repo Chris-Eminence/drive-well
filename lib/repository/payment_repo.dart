@@ -1,28 +1,48 @@
 import 'dart:convert';
-import 'package:drive_well/models/payment_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> makePayment(Payment payment) async {
-  final url = Uri.parse('https://test001.otecfx.com/api/payment/make_payment');
+import '../helper/auth_helper.dart';
 
+Future<Map<String, dynamic>?> createBooking(int duration) async {
+  final prefs = await SharedPreferences.getInstance();
+  String? userToken = prefs.getString('user_token');
+
+  print("user token $userToken");
+  const String baseUrl = 'https://careerconnects.us/api/bookings';
   try {
     final response = await http.post(
-      url,
+      Uri.parse(baseUrl),
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer $userToken', // Add token here
       },
-      body: jsonEncode(payment.toJson()),
+      body: jsonEncode({
+        'duration': duration,
+      }),
     );
 
-    if (response.statusCode == 200) {
-      // Successfully sent the payment
-      print('Payment successful: ${response.body}');
+    print("this duration is: $duration");
+    print(jsonEncode({'duration': duration}));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("status code ${response.statusCode}");
+      final responseData = jsonDecode(response.body);
+
+      print("this is the payment response data $responseData");
+
+      return {
+        'user': responseData['bookings']['payment'],
+        // Optional: Include full user data
+      };
     } else {
-      // Handle errors
-      print('Payment failed: ${response.statusCode} - ${response.body}');
+      print("status code ${response.statusCode}");
+      print('Booking fail: ${response.body}');
+      return null;
     }
   } catch (e) {
-    // Handle exceptions
-    print('Error occurred: $e');
+    print('Error during login: $e');
+    return null;
   }
 }

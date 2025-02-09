@@ -1,19 +1,113 @@
 import 'dart:convert';
+import 'package:drive_well/helper/auth_helper.dart';
 import 'package:drive_well/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:drive_well/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class UserTestProfilePage extends StatelessWidget {
+class UserTestProfilePage extends StatefulWidget {
   const UserTestProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final currentUser = userProvider.currentUser;
+  State<UserTestProfilePage> createState() => _UserTestProfilePageState();
+}
 
+class _UserTestProfilePageState extends State<UserTestProfilePage> {
+  Map<String, dynamic>? userDetails;
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserDetails();
+  }
+
+
+  Future<void> fetchUserDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('user_id'); // Retrieve user_id
+    print("this current user id is: $userId");
+
+    if (userId == null) {
+      print("No user ID found. User might be logged out.");
+      setState(() => isLoading = false);
+      return;
+    }
+
+    // final Uri url = Uri.parse("https://careerconnects.us/api/user/data"); // Use user ID
+    final Uri url = Uri.parse("https://careerconnects.us/api/user/$userId/data"); // Use user ID
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          userDetails = data['user'];
+          isLoading = false;
+        });
+      } else {
+
+        print("Error: ${response.statusCode} - ${response.body}");
+        setState(() => isLoading = false);
+      }
+    } catch (e) {
+      print("Exception occurred: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+
+  // Future<void> fetchUserDetails() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString('user_token');
+  //
+  //
+  //
+  //   if (token == null) {
+  //     print("No token found. User might be logged out.");
+  //     setState(() => isLoading = false);
+  //     return;
+  //   }
+  //
+  //   final Uri url = Uri.parse("https://careerconnects.us/api/user/data");
+  //
+  //   try {
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         "Authorization": "Bearer $token",
+  //         "Content-Type": "application/json",
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = jsonDecode(response.body);
+  //       setState(() {
+  //         userDetails = data['user'];
+  //         isLoading = false;
+  //       });
+  //     } else {
+  //       print("Error: ${response.statusCode} - ${response.body}");
+  //       setState(() => isLoading = false);
+  //     }
+  //   } catch (e) {
+  //     print("Exception occurred: $e");
+  //     setState(() => isLoading = false);
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,11 +124,10 @@ class UserTestProfilePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: currentUser == null
-                ? const Center(
-              child: Text('Please Login to see your details'),
-            )
-                : Column(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : userDetails != null ? Column(
+
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Profile picture
@@ -51,7 +144,7 @@ class UserTestProfilePage extends StatelessWidget {
 
                 // User name
                 Text(
-                  "${currentUser.firstName} ${currentUser.lastName}",
+                  "${userDetails!['first_name']} ${userDetails!['last_name']}",
                   style: GoogleFonts.nunito(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -62,7 +155,7 @@ class UserTestProfilePage extends StatelessWidget {
 
                 // Email
                 Text(
-                  '${currentUser.email}',
+                  "${userDetails!['email']}",
                   style: GoogleFonts.nunito(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -73,7 +166,8 @@ class UserTestProfilePage extends StatelessWidget {
 
                 // Profile details section
                 _buildProfileDetailItem(Icons.phone, 'Phone Number',
-                    currentUser.phoneNumber!),
+                  "${userDetails!['phone_number']}",
+                ),
                 const Divider(),
 
                 // Edit Profile button
@@ -89,7 +183,7 @@ class UserTestProfilePage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    _showEditDialog(context, userProvider);
+                    // _showEditDialog(context, userProvider);
                   },
                   child: Padding(
                     padding:
@@ -121,7 +215,7 @@ class UserTestProfilePage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ) : const Center(child: Text("Failed to load user details.")),
           ),
         ),
       ),
@@ -154,61 +248,61 @@ class UserTestProfilePage extends StatelessWidget {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Edit Profile'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: addressController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'First Name',
-              ),
+      builder: (BuildContext context) =>
+          AlertDialog(
+            title: const Text('Edit Profile'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'First Name',
+                  ),
+                ),
+
+              ],
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  // Update user details
+                  final success = await _updateUserDetails(
+                    userProvider.token,
+                    addressController.text,
+                  );
 
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: const Text('Cancel'),
+                  if (success) {
+                    userProvider.updateUserDetails(
+                        addressController.text
+                    );
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Profile updated successfully')),
+                    );
+                  } else {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to update profile')),
+                    );
+                  }
+                },
+                child: const Text('Save'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () async {
-              // Update user details
-              final success = await _updateUserDetails(
-                userProvider.token,
-                addressController.text,
-              );
-
-              if (success) {
-                userProvider.updateUserDetails(
-                  addressController.text
-                );
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Profile updated successfully')),
-                );
-              } else {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Failed to update profile')),
-                );
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
     );
   }
 
   // Function to send updated user details to the backend
-  Future<bool> _updateUserDetails(
-      String token,
-      String address,
-      ) async {
+  Future<bool> _updateUserDetails(String token,
+      String address,) async {
     const String baseUrl = 'https://test001.otecfx.com/api/user/2'; // Replace with your API URL
     try {
       final response = await http.put(
@@ -218,8 +312,7 @@ class UserTestProfilePage extends StatelessWidget {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          'address' : address
-
+          'address': address
         }),
       );
 

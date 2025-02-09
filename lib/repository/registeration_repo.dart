@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 
 class UserService {
-  final String baseUrl = 'https://test001.otecfx.com/api/auth';
+  // final String baseUrl = 'https://test001.otecfx.com/api/auth';
+  final String baseUrl = 'https://careerconnects.us/api/auth/register';
 
 
   Future<User?> registerUser({
@@ -15,7 +16,7 @@ class UserService {
     required String address,
     required String password, confirmPassword,
   }) async {
-    final url = Uri.parse('$baseUrl/register');
+    final url = Uri.parse(baseUrl);
     final body = {
       'email': email,
       'first_name': firstName,

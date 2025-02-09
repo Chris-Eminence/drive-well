@@ -6,6 +6,7 @@ import 'package:drive_well/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../models/payment_model.dart';
+import '../repository/payment_repo.dart';
 import '../widgets/description.dart'; // Ensure constants are imported
 
 class DetailsPage extends StatefulWidget {
@@ -25,22 +26,8 @@ class _DetailsPageState extends State<DetailsPage> {
       floatingActionButton: userProvider.hoursCounter > 0
     ? FloatingActionButton.extended(
     backgroundColor: kPrimaryColor, // Set your preferred color
-      onPressed: () async{
-        // Handle continue action
-        print('Continue button pressed');
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => const CheckoutPage()));
-
-        final payment = Payment(
-          email: userProvider.currentUser!.email!,
-          amount: userProvider.finalPrice, // Amount in cents or as per requirement
-          hours: userProvider.hoursCounter, // Duration in hours
-          courseId: 1,
-          duration: userProvider.hoursCounter.toString(), // Duration description
-        );
-
-        // Call the provider method to process the payment
-        await Provider.of<UserProvider>(context, listen: false)
-            .processPayment(payment);
+      onPressed: (){
+        createBooking(userProvider.hoursCounter);
       },
       label: Text(
         "₦${userProvider.finalPrice} Continue",
