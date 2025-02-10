@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         backgroundColor: kPrimaryColor,
-        centerTitle: true,
+
       ),
       body: SafeArea(
         child: StreamBuilder<Map<String, dynamic>?>(

@@ -46,6 +46,17 @@ class _HomepageState extends State<Homepage> {
 
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Drive Well',
+          style: GoogleFonts.nunito(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: kPrimaryColor,
+
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

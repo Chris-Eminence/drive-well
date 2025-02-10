@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+
+import '../constants.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -30,13 +33,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
       return;
     }
 
-    final String apiUrl = "http://127.0.0.1:8000/api/get-bookings/$userId";
-
+    final String apiUrl = "https://careerconnects.us/api/get-bookings/$userId";
+    print(prefs.getString("user_token"));
     try {
-      final response = await http.get(Uri.parse(apiUrl));
+      final response = await http.get(Uri.parse(apiUrl),
+          headers: {"Authorization": "Bearer ${prefs.getString("user_token")}"
+
+      }
+          // print the token
+
+
+      );
+      print("status code ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
+        print("Bookings data: $data");
 
         if (data["success"] == true) {
           setState(() {
@@ -56,7 +68,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("My Bookings")),
+      appBar: AppBar(
+        title: Text(
+          'Bookings history',
+          style: GoogleFonts.nunito(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: kPrimaryColor,
+
+      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : bookings.isEmpty

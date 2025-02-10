@@ -31,9 +31,7 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drive Well'),
-      ),
+
       body: _screens[_currentIndex], // Display the selected screen
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
