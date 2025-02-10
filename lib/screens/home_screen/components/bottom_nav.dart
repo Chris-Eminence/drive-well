@@ -1,4 +1,5 @@
 import 'package:drive_well/constants.dart';
+import 'package:drive_well/screens/history_page.dart';
 import 'package:drive_well/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class _BottomNavState extends State<BottomNav> {
   // List of widgets for each screen
   final List<Widget> _screens = [
     const Center(child: Homepage()),
-    const Center(child: Text('History screen ')),
+    Center(child: HistoryScreen()),
     const Center(child: ProfilePage()),
   ];
 

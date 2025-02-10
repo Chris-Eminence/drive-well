@@ -21,6 +21,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _addressController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  bool _obscureText = true;
+  bool _obscureText2 = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  } void _togglePassword2Visibility() {
+    setState(() {
+      _obscureText2 = !_obscureText2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -118,17 +131,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 TextFormField(
                   controller: _passwordController,
                   keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        onPressed: _togglePasswordVisibility,
+                        icon: Icon(_obscureText
+                            ? Icons.visibility
+                            : Icons.visibility_off)),
                     labelText: 'Password',
-                    labelStyle: TextStyle(color: Colors.black54),
-                    enabledBorder: OutlineInputBorder(
+                    labelStyle: const TextStyle(color: Colors.black54),
+                    enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF1D2445)),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF1D2445)),
                     ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscureText,
                   validator: (value) =>
                   value!.isEmpty ? 'Enter password' : null,
                 ),
@@ -137,17 +155,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   keyboardType: TextInputType.visiblePassword,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        onPressed: _togglePassword2Visibility,
+                        icon: Icon(_obscureText
+                            ? Icons.visibility
+                            : Icons.visibility_off)),
                     labelText: 'Confirm Password',
-                    labelStyle: TextStyle(color: Colors.black54),
-                    enabledBorder: OutlineInputBorder(
+                    labelStyle: const TextStyle(color: Colors.black54),
+                    enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF1D2445)),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFF1D2445)),
                     ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscureText2,
                   validator: (value) => value != _passwordController.text
                       ? 'Passwords do not match'
                       : null,

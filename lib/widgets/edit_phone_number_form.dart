@@ -1,18 +1,18 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 import '../constants.dart';
 
-class EditProfileForm extends StatefulWidget {
-  const EditProfileForm({super.key});
+class EditPhoneNumberForm extends StatefulWidget {
+  const EditPhoneNumberForm({super.key});
 
   @override
-  State<EditProfileForm> createState() => _EditProfileFormState();
+  State<EditPhoneNumberForm> createState() => _EditPhoneNumberFormState();
 }
 
-class _EditProfileFormState extends State<EditProfileForm> {
+class _EditPhoneNumberFormState extends State<EditPhoneNumberForm> {
   final TextEditingController _textController = TextEditingController();
 
   int? _userId;
@@ -43,7 +43,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
     });
 
     final String apiUrl = 'https://careerconnects.us/api/user/$_userId';
-    final Map<String, dynamic> data = {'address': _textController.text};
+    final Map<String, dynamic> data = {'phone_number': _textController.text};
 
     try {
       final response = await http.put(
@@ -54,7 +54,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Address updated successfully!")),
+          const SnackBar(content: Text("Phone number updated successfully!")),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,6 +82,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
       children: [
         TextField(
           controller: _textController,
+          keyboardType: TextInputType.phone,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: "Enter Address",

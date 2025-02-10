@@ -20,8 +20,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool isLoading = false; // Added loading indicator state
+  bool _obscureText = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
-                      validator: (value) => value!.isEmpty ? 'Enter email' : null,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter email' : null,
                       decoration: const InputDecoration(
                         labelText: 'Email',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -68,25 +76,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(
                       height: 20,
-                    ),               
+                    ),
                     TextFormField(
                       controller: _passwordController,
                       keyboardType: TextInputType.visiblePassword,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                            onPressed: _togglePasswordVisibility,
+                            icon: Icon(_obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off)),
                         labelText: 'Password',
-                        labelStyle: TextStyle(color: Colors.black54),
-                        enabledBorder: OutlineInputBorder(
+                        labelStyle: const TextStyle(color: Colors.black54),
+                        enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xFF1D2445)),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xFF1D2445)),
                         ),
                       ),
-                      obscureText: true,
+                      obscureText: _obscureText,
                       validator: (value) =>
-                      value!.isEmpty ? 'Enter password' : null,
+                          value!.isEmpty ? 'Enter password' : null,
                     ),
-              
                     const SizedBox(height: 20),
                     if (userProvider.isLoading)
                       const Center(child: CircularProgressIndicator())
@@ -99,15 +111,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 email: _emailController.text,
                                 password: _passwordController.text,
                               );
-          
+
                               if (success) {
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => BottomNav()),
+                                  MaterialPageRoute(
+                                      builder: (context) => BottomNav()),
                                 );
                               } else if (userProvider.errorMessage != null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(userProvider.errorMessage!)),
+                                  SnackBar(
+                                      content:
+                                          Text(userProvider.errorMessage!)),
                                 );
                               }
                             }
