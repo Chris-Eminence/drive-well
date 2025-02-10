@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToNextScreen() async {
     // Wait for the splash screen animation duration
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 4));
 
     // Check if the user is logged in (i.e., token and ID exist)
     final isLoggedIn = await AuthHelper.isLoggedIn();

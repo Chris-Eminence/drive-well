@@ -30,7 +30,7 @@ class UserProvider with ChangeNotifier {
   int _hoursCounter = 0; // Counter for hours
   int get hoursCounter => _hoursCounter;
 
-  int _initialPrice = 5000; // Initial price per hour
+  int _initialPrice = 1000; // Initial price per hour
   int get initialPrice => _initialPrice;
 
   int get finalPrice => _hoursCounter * _initialPrice; // Calculates the final price

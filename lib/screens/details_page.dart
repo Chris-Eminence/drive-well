@@ -18,6 +18,23 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
 
+  bool _isLoading = false;
+
+  Future<void> handleBooking() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    setState(() {
+      _isLoading = true;
+    });
+
+    await createBooking(context, userProvider.hoursCounter);
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -26,10 +43,8 @@ class _DetailsPageState extends State<DetailsPage> {
       floatingActionButton: userProvider.hoursCounter > 0
     ? FloatingActionButton.extended(
     backgroundColor: kPrimaryColor, // Set your preferred color
-      onPressed: (){
-        createBooking(userProvider.hoursCounter);
-      },
-      label: Text(
+      onPressed: _isLoading ? null : handleBooking,
+      label: _isLoading ? const Center(child: CircularProgressIndicator(color: Colors.white)) : Text(
         "₦${userProvider.finalPrice} Continue",
         style: GoogleFonts.nunito(
           fontSize: 18,

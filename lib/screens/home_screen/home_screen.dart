@@ -4,7 +4,9 @@ import 'package:drive_well/screens/home_screen/components/carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../../constants.dart';
+import '../../provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -40,6 +42,8 @@ class _HomepageState extends State<Homepage> {
     // UserProvider up = Provider.of<UserProvider>(context);
 
     // print("this is the user name ${up.user!.firstName}");
+    final userProvider = Provider.of<UserProvider>(context);
+
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -135,7 +139,7 @@ class _HomepageState extends State<Homepage> {
                                     ],
                                   ),
                                   Text(
-                                    '₦5000/hour',
+                                    '₦${userProvider.initialPrice}/hour',
                                     style: GoogleFonts.nunito(
                                         fontSize: 30,
                                         fontWeight: FontWeight.bold,

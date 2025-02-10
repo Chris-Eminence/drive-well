@@ -63,16 +63,14 @@ class _PrimaryOnboardingScreenState extends State<PrimaryOnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Expanded(
-            child: PageView.builder(
-              scrollDirection: Axis.horizontal,
-              onPageChanged: _onchanged,
-              controller: _pageController,
-              itemCount: pages.length,
-              itemBuilder: (context, int index) {
-                return pages[index];
-              },
-            ),
+          PageView.builder(
+            scrollDirection: Axis.horizontal,
+            onPageChanged: _onchanged,
+            controller: _pageController,
+            itemCount: pages.length,
+            itemBuilder: (context, int index) {
+              return pages[index];
+            },
           ),
           Positioned(
             bottom: 20,

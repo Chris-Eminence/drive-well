@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../helper/auth_helper.dart';
 
-Future<Map<String, dynamic>?> createBooking(int duration) async {
+Future<Map<String, dynamic>?> createBooking(BuildContext context, int duration) async {
   final prefs = await SharedPreferences.getInstance();
   String? userToken = prefs.getString('user_token');
 
@@ -31,6 +34,20 @@ Future<Map<String, dynamic>?> createBooking(int duration) async {
       final responseData = jsonDecode(response.body);
 
       print("this is the payment response data $responseData");
+      if (responseData['success'] == true) {
+        String authorizationUrl = responseData['booking']['payment']['authorization_url'];
+        print("This is the payment link: $authorizationUrl");
+
+        if (await canLaunchUrl(Uri.parse(authorizationUrl))){
+          await launch(authorizationUrl);
+        } else {
+          throw 'Could not launch $authorizationUrl';
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Booking failed: ${responseData['message']}')),
+        );
+      }
 
       return {
         'user': responseData['bookings']['payment'],

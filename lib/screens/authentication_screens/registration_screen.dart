@@ -1,4 +1,5 @@
 import 'package:drive_well/provider/user_provider.dart';
+import 'package:drive_well/screens/authentication_screens/login_screen.dart';
 import 'package:drive_well/screens/home_screen/components/bottom_nav.dart';
 import 'package:drive_well/widgets/auth_buttons.dart';
 import 'package:flutter/material.dart';
@@ -115,22 +116,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _addressController,
-                  decoration: const InputDecoration(
-                    labelText: 'Address',
-                    labelStyle: TextStyle(color: Colors.black54),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF1D2445)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF1D2445)),
-                    ),
-                  ),
-                  validator: (value) =>
-                  value!.isEmpty ? 'Enter address' : null,
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
                   controller: _passwordController,
                   keyboardType: TextInputType.visiblePassword,
                   decoration: const InputDecoration(
@@ -188,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           if (success) {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => BottomNav()),
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
                             );
                           } else if (userProvider.errorMessage != null) {
                             ScaffoldMessenger.of(context).showSnackBar(
